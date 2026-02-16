@@ -54,16 +54,19 @@ venv.bak/
 Thumbs.db
 
 # Data (large files)
+# data/
+# dataset/
+# !results/
+# !assets/
+
+# Keep specific image extensions for documentation
+# Ignore only data/ and dataset/ folders
 data/
 dataset/
-*.jpeg
-*.jpg
-*.png
-*.tiff
 *.ome.tiff
 
 # Results
-results/
+# results/ (moved to specific allows)
 outputs/
 logs/
 
