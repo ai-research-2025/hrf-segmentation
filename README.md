@@ -287,14 +287,10 @@ pip install -r requirements.txt
 
 If you use this code in your research, please cite:
 
-```bibtex
-@misc{hrf-segmentation-2024,
-  title={HRF Segmentation with U-Net and Attention U-Net},
-  author={ai-research-2025},
-  year={2024},
-  publisher={GitHub},
-  url={https://github.com/ai-research-2025/hrf-segmentation}
-}
+```text
+Pavithra Kodiyalbail Chakrapani, Preetham Kumar, Sulatha V Bhandary, 
+Geetha Maiya, Shailaja S, Steven Fernandes, Prakhar Choudhary. 
+"U-Net Optimization for Hyperreflective Foci Segmentation in Retinal OCT"
 ```
 
 ---
