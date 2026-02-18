@@ -51,9 +51,9 @@ python hrf-aunet.py      # For Attention U-Net
 [**Google Drive - Model Weights**](https://drive.google.com/drive/folders/1J78I28EzEXMD3jNrusWfuQoCFeFhtZsT)
 
 Contains:
-- unet_best_model.pth (~355 MB)
-- aunet_best_model.pth (~361 MB)
-- Training scripts
+- `Unet/best_model.pth` - U-Net checkpoint (~355 MB)
+- `Attention-Unet/best_model.pth` - Attention U-Net checkpoint (~361 MB)
+- Test metrics, prediction visualizations, and ROC curves
 
 ---
 

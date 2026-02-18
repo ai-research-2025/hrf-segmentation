@@ -4,8 +4,6 @@
 
 Hyperreflective Foci (HRF) segmentation in OCT retinal images using U-Net and Attention U-Net deep learning models.
 
-![HRF Segmentation Demo](assets/demo.png)
-
 ## Project Overview
 
 This project implements and compares two state-of-the-art deep learning architectures for automatic segmentation of Hyperreflective Foci (HRF) in Optical Coherence Tomography (OCT) retinal images:
@@ -28,33 +26,55 @@ This project implements and compares two state-of-the-art deep learning architec
 
 | Metric | U-Net | Attention U-Net |
 |--------|-------|----------------|
-| **Dice Coefficient** | 0.2065 | 0.5017 |
-| **IoU (Jaccard)** | 0.1151 | 0.3348 |
-| **Precision** | 0.3842 | 0.5725 |
-| **Recall** | 0.1412 | 0.4464 |
-| **F1-Score** | 0.2065 | 0.5017 |
-| **AUC-ROC** | 0.3054 | 0.6045 |
+| **Dice Coefficient** | 0.5207 | 0.5033 |
+| **Intersection over Union (IoU)** | 0.3655 | 0.3515 |
+| **Precision** | 0.4800 | 0.5265 |
+| **Recall (Sensitivity)** | 0.6439 | 0.5391 |
+| **F1-Score** | 0.5184 | 0.5007 |
+| **Specificity** | 0.9998 | 0.9999 |
+| **Jaccard Index** | 0.3910 | 0.3695 |
+| **Area Under the Curve (AUC)** | 0.8411 | 0.6987 |
 
-> Note: Evaluation was performed on 65 test images using the training scripts' built-in evaluation pipeline.
+> Note: Evaluation was performed on the test set using the training scripts' built-in evaluation pipeline.
 
 ### Visual Results
 
+#### ROC Curves & Confusion Matrices
+
 <table>
   <tr>
-    <td><img src="results/roc_curves.png" alt="ROC Curves"/></td>
-    <td><img src="results/confusion_matrices.png" alt="Confusion Matrices"/></td>
+    <td><img src="results/Unet/unetnew.png" alt="U-Net ROC & Confusion Matrix"/></td>
+    <td><img src="results/Attention-Unet/aunet-new.jpg.png" alt="Attention U-Net ROC & Confusion Matrix"/></td>
   </tr>
   <tr>
-    <td align="center"><b>ROC Curves</b></td>
-    <td align="center"><b>Confusion Matrices</b></td>
+    <td align="center"><b>U-Net</b></td>
+    <td align="center"><b>Attention U-Net</b></td>
   </tr>
 </table>
 
-<p align="center">
-  <img src="results/predictions_visualization.png" alt="Prediction Examples" width="100%"/>
-  <br/>
-  <b>Sample Predictions: Original Image | Ground Truth | U-Net | Attention U-Net | Overlay</b>
-</p>
+#### U-Net Prediction Samples
+
+<table>
+  <tr>
+    <td><img src="results/Unet/557.png" alt="U-Net Prediction 557" width="200"/></td>
+    <td><img src="results/Unet/581.png" alt="U-Net Prediction 581" width="200"/></td>
+    <td><img src="results/Unet/624.png" alt="U-Net Prediction 624" width="200"/></td>
+    <td><img src="results/Unet/727.png" alt="U-Net Prediction 727" width="200"/></td>
+    <td><img src="results/Unet/818.png" alt="U-Net Prediction 818" width="200"/></td>
+  </tr>
+</table>
+
+#### Attention U-Net Prediction Samples
+
+<table>
+  <tr>
+    <td><img src="results/Attention-Unet/223a.png" alt="Attention U-Net Prediction 223" width="200"/></td>
+    <td><img src="results/Attention-Unet/253a.png" alt="Attention U-Net Prediction 253" width="200"/></td>
+    <td><img src="results/Attention-Unet/406a.png" alt="Attention U-Net Prediction 406" width="200"/></td>
+    <td><img src="results/Attention-Unet/624a.png" alt="Attention U-Net Prediction 624" width="200"/></td>
+    <td><img src="results/Attention-Unet/753a.png" alt="Attention U-Net Prediction 753" width="200"/></td>
+  </tr>
+</table>
 
 ---
 
@@ -83,13 +103,19 @@ hrf-segmentation/
 │   ├── hrfunet.py                    # U-Net training pipeline
 │   ├── hrf-aunet.py                  # Attention U-Net training pipeline
 │   └── requirements.txt              # Training dependencies
-├── results/                           # Example evaluation results
-│   ├── roc_curves.png
-│   ├── confusion_matrices.png
-│   ├── metrics_comparison.png
-│   └── predictions_visualization.png
-└── assets/                            # Documentation assets
-    └── demo.png
+└── results/                           # Training results and model checkpoints
+    ├── Unet/                         # U-Net results
+    │   ├── best_model.pth            # Best U-Net checkpoint
+    │   ├── latest_model.pth          # Latest U-Net checkpoint
+    │   ├── test_metrics.csv          # Test set metrics
+    │   ├── unetnew.png               # ROC curve & confusion matrix
+    │   └── *.png                     # Prediction visualizations
+    └── Attention-Unet/               # Attention U-Net results
+        ├── best_model.pth            # Best Attention U-Net checkpoint
+        ├── latest_model.pth          # Latest Attention U-Net checkpoint
+        ├── test_metrics.csv          # Test set metrics
+        ├── aunet-new.jpg.png         # ROC curve & confusion matrix
+        └── *.png                     # Prediction visualizations
 ```
 
 ---
@@ -98,20 +124,18 @@ hrf-segmentation/
 
 ### Download Pre-trained Weights
 
-Access the trained model checkpoints:
+Pre-trained model checkpoints are included in the `results/` directory of this repository:
+
+| Model | Path | Size |
+|-------|------|------|
+| U-Net (Best) | `results/Unet/best_model.pth` | ~355 MB |
+| U-Net (Latest) | `results/Unet/latest_model.pth` | ~355 MB |
+| Attention U-Net (Best) | `results/Attention-Unet/best_model.pth` | ~361 MB |
+| Attention U-Net (Latest) | `results/Attention-Unet/latest_model.pth` | ~361 MB |
+
+Alternatively, download from Google Drive:
 
 **[Download from Google Drive](https://drive.google.com/drive/folders/1J78I28EzEXMD3jNrusWfuQoCFeFhtZsT)**
-
-The drive contains:
-- U-Net/ - U-Net training code and weights
-- Attention-UNet/ - Attention U-Net training code and weights
-
-### Model Files
-
-| Model | Filename | Size |
-|-------|----------|------|
-| U-Net | unet_best_model.pth | ~355 MB |
-| Attention U-Net | aunet_best_model.pth | ~361 MB |
 
 ---
 
@@ -303,7 +327,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - U-Net architecture based on Ronneberger et al., 2015
 - Attention U-Net based on Oktay et al., 2018
-- HRF dataset and medical domain knowledge from ophthalmology research
+- The authors acknowledge the usage of retinal OCT images from the Department of Ophthalmology, Kasturba Medical College, Manipal Academy of Higher Education, Manipal, India.
 
 ---
 
