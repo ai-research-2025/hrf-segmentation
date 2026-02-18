@@ -17,25 +17,7 @@ Get started with HRF segmentation in 3 minutes!
 
 ---
 
-### Path 2: Run Evaluation (5 minutes)
-
-**Evaluate models locally using Jupyter Notebooks**
-
-1. Clone the repository: `git clone https://github.com/ai-research-2025/hrf-segmentation.git`
-2. Install dependencies: `pip install -r evaluation/requirements.txt`
-3. Download pre-trained models from [Google Drive](https://drive.google.com/drive/folders/1J78I28EzEXMD3jNrusWfuQoCFeFhtZsT)
-4. Open the notebook: `jupyter notebook evaluation/HRF_Segmentation_Evaluation.ipynb`
-5. Update paths and run all cells to get metrics and visualizations!
-
-**What you need:**
-- Python 3.8+
-- Test images in JPEG format
-- Ground truth masks in .ome.tiff format
-- Pre-trained models (.pth)
-
----
-
-### Path 3: Train Your Own Model (Advanced)
+### Path 2: Train Your Own Model (Advanced)
 
 **Train from scratch on your dataset**
 
@@ -48,7 +30,8 @@ cd hrf-segmentation
 cd training
 pip install -r requirements.txt
 
-# Prepare your data (images/ and masks/ folders)
+# Prepare your data (HRF_IMAGES/ and HRF_MASKS/ folders)
+# Edit Config class in the script to set your dataset paths
 # Then train!
 python hrfunet.py        # For U-Net
 python hrf-aunet.py      # For Attention U-Net
@@ -57,7 +40,7 @@ python hrf-aunet.py      # For Attention U-Net
 **Requirements:**
 - NVIDIA GPU (8GB+ VRAM)
 - Python 3.8+
-- Training dataset with images and masks
+- Training dataset with images (`HRF_IMAGES/`) and masks (`HRF_MASKS/`)
 
 ---
 
@@ -78,7 +61,6 @@ Contains:
 
 - **Full Documentation**: See main [README.md](README.md)
 - **Training Guide**: [training/README.md](training/README.md)
-- **Evaluation Guide**: [evaluation/README.md](evaluation/README.md)
 
 ---
 

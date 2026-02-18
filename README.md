@@ -19,7 +19,6 @@ This project implements and compares two state-of-the-art deep learning architec
 - Live Web Demo: Interactive HuggingFace Space with GPU inference
 - Comprehensive Evaluation: Detailed metrics, ROC curves, and confusion matrices
 - Reproducible Results: Fixed random seeds and complete training pipeline
-- Jupyter Notebook: Comprehensive evaluation pipeline for detailed analysis
 
 ---
 
@@ -36,7 +35,7 @@ This project implements and compares two state-of-the-art deep learning architec
 | **F1-Score** | 0.2065 | 0.5017 |
 | **AUC-ROC** | 0.3054 | 0.6045 |
 
-> Note: Evaluation was performed on 65 test images using the provided evaluation notebook.
+> Note: Evaluation was performed on 65 test images using the training scripts' built-in evaluation pipeline.
 
 ### Visual Results
 
@@ -72,14 +71,6 @@ Experience live HRF segmentation in your browser:
 - View predictions in real-time
 - Download segmentation masks
 
-### Run Evaluation Notebook
-
-1. Clone the repository and navigate to the `evaluation` directory
-2. Install the necessary dependencies: `pip install -r requirements.txt`
-3. Download pre-trained weights from Google Drive and place them in the specified path
-4. Launch Jupyter Notebook: `jupyter notebook HRF_Segmentation_Evaluation.ipynb`
-5. Update file paths in the notebook and run all cells to generate results
-
 ---
 
 ## Repository Structure
@@ -92,9 +83,6 @@ hrf-segmentation/
 │   ├── hrfunet.py                    # U-Net training pipeline
 │   ├── hrf-aunet.py                  # Attention U-Net training pipeline
 │   └── requirements.txt              # Training dependencies
-├── evaluation/                        # Evaluation and testing
-│   ├── HRF_Segmentation_Evaluation.ipynb  # Comprehensive evaluation notebook
-│   └── requirements.txt              # Evaluation dependencies
 ├── results/                           # Example evaluation results
 │   ├── roc_curves.png
 │   ├── confusion_matrices.png
@@ -136,10 +124,10 @@ The drive contains:
 git clone https://github.com/ai-research-2025/hrf-segmentation.git
 cd hrf-segmentation
 
-# Install dependencies for evaluation
-pip install -r evaluation/requirements.txt
+# Install training dependencies
+pip install -r training/requirements.txt
 
-# Download pre-trained models
+# Download pre-trained models from Google Drive
 # Place them in the appropriate directories
 ```
 
@@ -150,7 +138,7 @@ Core Requirements:
 - PyTorch 1.12+
 - CUDA 11.3+ (for GPU training)
 
-See individual requirements.txt files in each directory for detailed dependencies.
+See `training/requirements.txt` for detailed dependencies.
 
 ---
 
@@ -158,36 +146,37 @@ See individual requirements.txt files in each directory for detailed dependencie
 
 ### 1. Training Your Own Models
 
+Both training scripts use a `Config` class at the top of the file for all hyperparameters. Edit the `DATA_DIR` and `CHECKPOINT_DIR` paths before running.
+
+#### Prepare Your Dataset
+
+Organize your data:
+```
+dataset/
+├── HRF_IMAGES/
+│   ├── image001.jpeg
+│   └── ...
+└── HRF_MASKS/
+    ├── image001_HRF.ome.tiff
+    └── ...
+```
+
 #### Train U-Net
 ```bash
 cd training
-python hrfunet.py --data_dir /path/to/dataset --epochs 100 --batch_size 8
+python hrfunet.py
 ```
 
 #### Train Attention U-Net
 ```bash
 cd training
-python hrf-aunet.py --data_dir /path/to/dataset --epochs 100 --batch_size 8
+python hrf-aunet.py
 ```
 
-### 2. Evaluation
-
-Run the Jupyter notebook locally:
-```bash
-cd evaluation
-jupyter notebook HRF_Segmentation_Evaluation.ipynb
-```
-
-### 3. Inference
-
-#### Python API
-```python
-# Refer to training scripts or the evaluation notebook 
-# for sample inference and preprocessing implementations.
-```
+### 2. Inference
 
 #### Web Interface
-Simply use the HuggingFace Space link above for browser-based inference.
+Use the [HuggingFace Space](https://huggingface.co/spaces/AI-RESEARCHER-2024/HRF_Segmentation) for browser-based inference.
 
 ---
 
@@ -215,7 +204,8 @@ Enhanced U-Net with attention gates:
 ### Preprocessing
 
 **U-Net:**
-- Simple 0-255 normalization to [0, 1]
+- CLAHE preprocessing (enhances HRF visibility)
+- 0-255 normalization to [0, 1]
 - RGB input (3 channels)
 
 **Attention U-Net:**
@@ -224,27 +214,35 @@ Enhanced U-Net with attention gates:
   - Mean: [0.485, 0.456, 0.406]
   - Std: [0.229, 0.224, 0.225]
 
-Critical: Different preprocessing for each model matches their training regime!
+> **Note:** Different preprocessing for each model matches their training regime!
 
 ### Training Configuration
 
-- Optimizer: Adam (lr=1e-4)
-- Loss Function: Binary Cross-Entropy + Dice Loss
+| Parameter | U-Net | Attention U-Net |
+|-----------|-------|----------------|
+| **Loss Function** | Focal Tversky Loss (α=0.3, β=0.7, γ=4/3) | Dice Loss (smooth=1.0) |
+| **Optimizer** | Adam (lr=1e-3, wd=1e-4) | Adam (lr=1e-3, wd=1e-4) |
+| **LR Scheduler** | ReduceLROnPlateau (patience=5) | CosineAnnealing (T_max=100) |
+| **Early Stopping** | 25 epochs | 15 epochs |
+| **Augmentation** | Flips, ShiftScaleRotate, BrightnessContrast, Gamma | None |
+| **Batch Size** | 4 | 4 |
+| **Epochs** | 100 | 100 |
+
 - Data Split: 70% Train / 15% Validation / 15% Test
-- Augmentation: Random flips, rotations, elastic transforms
 - Random Seed: 42 (for reproducibility)
+- Mixed Precision Training (AMP): Enabled
 
 ---
 
 ## Evaluation Metrics
 
-The evaluation generates:
+Both training scripts automatically evaluate on the test set and generate:
 
 1. Segmentation Metrics
    - Dice Coefficient
    - IoU (Jaccard Index)
    - Precision, Recall, F1-Score
-   - Specificity, Sensitivity
+   - Specificity
 
 2. Classification Metrics
    - ROC-AUC curves
@@ -252,9 +250,9 @@ The evaluation generates:
    - True/False Positives/Negatives
 
 3. Visualizations
-   - Side-by-side predictions
-   - Overlay masks on original images
-   - Comparative performance charts
+   - Side-by-side predictions (Image, Ground Truth, Prediction)
+   - ROC curve and confusion matrix plots
+   - Results saved to CSV
 
 ---
 
